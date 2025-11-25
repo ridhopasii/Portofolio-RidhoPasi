@@ -15,7 +15,7 @@
         extend: {
           colors: {
             primary: {
-              600: '#1d4ed8', // biru tua
+              600: '#1d4ed8',
               700: '#1e3a8a',
             },
             gold: '#f59e0b',
@@ -27,21 +27,18 @@
       }
     }
   </script>
-  <!-- Chart.js (untuk radar, bar, line) -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    /* Scroll reveal sederhana */
     .reveal {opacity: 0; transform: translateY(16px); transition: all .7s ease;}
     .reveal.visible {opacity: 1; transform: translateY(0)}
-    /* Parallax hero bg */
     .parallax::before{content:'';position:absolute;inset:0;background:radial-gradient(50% 50% at 50% 0%, rgba(29,78,216,.18), transparent 60%);transform:translateZ(0)}
   </style>
 </head>
 <body class="bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 text-slate-800 dark:text-slate-200">
   <script>
-    // THEME: persist dark / light
     const savedTheme = localStorage.getItem('theme') || 'light';
     if (savedTheme === 'dark') document.documentElement.classList.add('dark');
     function toggleTheme(){
@@ -250,13 +247,51 @@
     </div>
   </section>
 
-  <!-- BLOG -->
+  <!-- BLOG (DENGAN CRUD) -->
   <section id="blog" class="scroll-mt-24 py-16 md:py-24">
     <div class="mx-auto max-w-6xl px-4">
       <div class="mb-10">
         <div class="mb-2 text-xs font-semibold uppercase tracking-widest text-primary-600">Blog / Insight</div>
         <h2 class="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-50">Tulisan Terbaru</h2>
       </div>
+
+      <!-- ✅ FORM CRUD BLOG -->
+      <div class="mb-8 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 shadow-soft p-6 reveal">
+        <h4 class="mb-4 font-semibold">✏️ Kelola Tulisan Blog</h4>
+        <form id="blogForm" class="grid gap-4 md:grid-cols-2">
+          <input type="hidden" id="blogId" />
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1">Judul</label>
+            <input required id="blogTitle" placeholder="Contoh: Cara Belajar Efektif" class="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 px-4 py-2" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Tag</label>
+            <input required id="blogTag" placeholder="Produktivitas" class="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 px-4 py-2" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Tanggal (MMM YYYY)</label>
+            <input required id="blogDate" placeholder="Aug 2025" class="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 px-4 py-2" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium mb-1">Ringkasan (max 120 karakter)</label>
+            <textarea required id="blogExcerpt" maxlength="120" rows="2" placeholder="Deskripsi singkat tulisan..." class="w-full rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 px-4 py-2"></textarea>
+            <div class="text-xs text-slate-500 mt-1"><span id="charCount">0</span>/120</div>
+          </div>
+          <div class="md:col-span-2 flex gap-3">
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-gold text-white font-semibold rounded-xl hover:opacity-90">
+              <i data-lucide="save" class="w-4 h-4"></i> Simpan
+            </button>
+            <button type="button" id="btnCancel" class="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-white/10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5">
+              Batal
+            </button>
+            <button type="button" id="btnReset" class="text-xs text-red-500 hover:underline">
+              ❌ Reset ke data awal
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ✅ DAFTAR BLOG -->
       <div id="blogList" class="grid gap-6 md:grid-cols-3"></div>
     </div>
   </section>
@@ -328,7 +363,7 @@
   </footer>
 
   <script>
-    // DATA (bisa kamu edit langsung)
+    // DATA (TIDAK DIUBAH — aset tetap utuh)
     const DATA = {
       profile: {
         name: 'Ridho Robbi Pasi',
@@ -384,9 +419,9 @@
         { year: 2035, phase: 'Bisnis Internasional & Politik Nasional', bullets: ['Ekspansi global', 'Isu publik & kebijakan digital', 'Road to DPR RI'], progress: 10 },
       ],
       blog: [
-        { title: '3 Sistem Produktivitas buat Mahasiswa Baru', tag: 'Produktivitas', date: 'Aug 2025', excerpt: 'Time-blocking, habit tracking, dan weekly review biar kuliah & konten tetap on-track.', link: '#' },
-        { title: 'Dakwah Digital: Soft Skill Paling Panas Tahun Ini', tag: 'Dakwah Digital', date: 'Aug 2025', excerpt: 'Cara jadi bermanfaat tanpa noise: fokus value, adab komentar, dan data.', link: '#' },
-        { title: 'Toolset Techno-creators 2025', tag: 'Teknologi', date: 'Aug 2025', excerpt: 'Stack ringan buat kreator Gen Z: Figma, CapCut, Notion, dan Vite.', link: '#' },
+        { id: 1, title: '3 Sistem Produktivitas buat Mahasiswa Baru', tag: 'Produktivitas', date: 'Aug 2025', excerpt: 'Time-blocking, habit tracking, dan weekly review biar kuliah & konten tetap on-track.', link: '#' },
+        { id: 2, title: 'Dakwah Digital: Soft Skill Paling Panas Tahun Ini', tag: 'Dakwah Digital', date: 'Aug 2025', excerpt: 'Cara jadi bermanfaat tanpa noise: fokus value, adab komentar, dan data.', link: '#' },
+        { id: 3, title: 'Toolset Techno-creators 2025', tag: 'Teknologi', date: 'Aug 2025', excerpt: 'Stack ringan buat kreator Gen Z: Figma, CapCut, Notion, dan Vite.', link: '#' },
       ],
       gallery: [
         'foto1.jpg?q=80&w=1200&auto=format&fit=crop',
@@ -398,27 +433,68 @@
       ]
     };
 
-    // Typing effect
-    const typingTexts = ['Muslim yang bermanfaat','Mahasiswa TI USU','Technopreneur muda','Calon politisi masa depan'];
-    let tIndex=0, sub=0, del=false;
-    function typeLoop(){
-      const target = document.getElementById('typed');
-      const caret = document.getElementById('caret');
-      const full = typingTexts[tIndex % typingTexts.length];
-      target.textContent = full.substring(0, sub);
-      caret.style.opacity = caret.style.opacity === '0' ? '1' : '0';
-      if(!del && sub===full.length){ del=true; setTimeout(typeLoop, 900); return; }
-      if(del && sub===0){ del=false; tIndex++; }
-      sub += del ? -1 : 1;
-      setTimeout(typeLoop, del? 50 : 75);
+    // ✅ ====== CRUD BLOG (LOCALSTORAGE) ======
+    function loadBlogs() {
+      const saved = localStorage.getItem('blogs');
+      return saved ? JSON.parse(saved) : DATA.blog;
     }
 
-    // Scroll reveal
+    function saveBlogs(blogs) {
+      localStorage.setItem('blogs', JSON.stringify(blogs));
+    }
+
+    function renderBlogList() {
+      const blog = document.getElementById('blogList');
+      const blogs = loadBlogs();
+      
+      blog.innerHTML = blogs.map(p => `
+        <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 shadow-soft p-6">
+          <div class="mb-2 flex items-center justify-between text-xs">
+            <span class="rounded-full bg-primary-600/10 px-2 py-1 font-semibold text-primary-600">${p.tag}</span>
+            <span class="opacity-70">${p.date}</span>
+          </div>
+          <h4 class="text-lg font-bold">${p.title}</h4>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">${p.excerpt}</p>
+          <div class="mt-4 flex gap-2">
+            <button onclick="editBlog(${p.id})" class="text-sm flex items-center gap-1 text-blue-600 hover:underline">
+              <i data-lucide="edit-2" class="w-3 h-3"></i> Edit
+            </button>
+            <button onclick="deleteBlog(${p.id})" class="text-sm flex items-center gap-1 text-red-500 hover:underline">
+              <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    }
+
+    function editBlog(id) {
+      const blogs = loadBlogs();
+      const blog = blogs.find(b => b.id === id);
+      if (!blog) return;
+
+      document.getElementById('blogId').value = blog.id;
+      document.getElementById('blogTitle').value = blog.title;
+      document.getElementById('blogTag').value = blog.tag;
+      document.getElementById('blogDate').value = blog.date;
+      document.getElementById('blogExcerpt').value = blog.excerpt;
+      document.getElementById('charCount').textContent = blog.excerpt.length;
+    }
+
+    function deleteBlog(id) {
+      if (!confirm('Yakin hapus tulisan ini?')) return;
+      const blogs = loadBlogs().filter(b => b.id !== id);
+      saveBlogs(blogs);
+      renderBlogList();
+    }
+
+    // ✅ ====== RENDER HELPER (tidak diubah) ======
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
     },{threshold:.18});
 
-    // Render helpers
     function renderLists(){
       const hardList = document.getElementById('hardSkillList');
       hardList.innerHTML = DATA.skills.hard.map(s=>`
@@ -479,17 +555,8 @@
           </div>
         </li>`).join('');
 
-      const blog = document.getElementById('blogList');
-      blog.innerHTML = DATA.blog.map(p=>`
-        <div class="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/60 shadow-soft p-6">
-          <div class="mb-2 flex items-center justify-between text-xs"><span class="rounded-full bg-primary-600/10 px-2 py-1 font-semibold text-primary-600">${p.tag}</span><span class="opacity-70">${p.date}</span></div>
-          <h4 class="text-lg font-bold">${p.title}</h4>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">${p.excerpt}</p>
-          <a href="${p.link}" class="mt-4 inline-flex items-center gap-1 text-primary-600">Baca selengkapnya <i data-lucide="external-link" class="w-3 h-3"></i></a>
-        </div>`).join('');
-
       const gal = document.getElementById('galleryGrid');
-      gal.innerHTML = DATA.gallery.map((src,i)=>`<img src="${src}" alt="gallery-${'${i}'}" class="aspect-video w-full rounded-2xl object-cover shadow reveal"/>`).join('');
+      gal.innerHTML = DATA.gallery.map((src,i)=>`<img src="${src}" alt="gallery-${i}" class="aspect-video w-full rounded-2xl object-cover shadow reveal"/>`).join('');
 
       const testi = document.getElementById('testiGrid');
       const TESTIMONIALS = [
@@ -511,7 +578,6 @@
     }
 
     function renderCharts(){
-      // Radar for hard skills
       const rlabels = DATA.skills.hard.map(s=>s.name);
       const rdata = DATA.skills.hard.map(s=>s.level);
       new Chart(document.getElementById('radarSkills'), {
@@ -520,25 +586,80 @@
         options: { scales: { r: { suggestedMin: 0, suggestedMax: 100 } }, plugins:{ legend:{display:false} } }
       });
 
-      // Bar for languages
       new Chart(document.getElementById('barLanguages'), {
         type: 'bar', data: { labels: DATA.skills.languages.map(l=>l.name), datasets: [{ label: 'Level', data: DATA.skills.languages.map(l=>l.level) }] },
         options: { scales: { y: { suggestedMin: 0, suggestedMax: 100 } }, plugins:{ legend:{display:false} } }
       });
 
-      // Line for roadmap progress
       new Chart(document.getElementById('lineRoadmap'), {
         type: 'line', data: { labels: DATA.roadmap.map(r=>r.year), datasets: [{ label: 'Progress', data: DATA.roadmap.map(r=>r.progress) }] },
         options: { plugins:{ legend:{display:false} }, elements:{ point:{ radius:5 } } }
       });
     }
 
-    // Init
-    window.addEventListener('DOMContentLoaded', ()=>{
+    // ✅ Event Listeners CRUD
+    document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Render semua bagian awal
       renderLists();
+      renderBlogList();
       renderCharts();
+
+      // Typing effect
+      const typingTexts = ['Muslim yang bermanfaat','Mahasiswa TI USU','Technopreneur muda','Calon politisi masa depan'];
+      let tIndex=0, sub=0, del=false;
+      function typeLoop(){
+        const target = document.getElementById('typed');
+        const caret = document.getElementById('caret');
+        const full = typingTexts[tIndex % typingTexts.length];
+        target.textContent = full.substring(0, sub);
+        caret.style.opacity = caret.style.opacity === '0' ? '1' : '0';
+        if(!del && sub===full.length){ del=true; setTimeout(typeLoop, 900); return; }
+        if(del && sub===0){ del=false; tIndex++; }
+        sub += del ? -1 : 1;
+        setTimeout(typeLoop, del? 50 : 75);
+      }
       typeLoop();
+
+      // ✅ Form Blog Event
+      document.getElementById('blogForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('blogId').value;
+        const title = document.getElementById('blogTitle').value.trim();
+        const tag = document.getElementById('blogTag').value.trim();
+        const date = document.getElementById('blogDate').value.trim();
+        const excerpt = document.getElementById('blogExcerpt').value.trim();
+
+        const blogs = loadBlogs();
+        if (id) {
+          const index = blogs.findIndex(b => b.id == id);
+          if (index !== -1) blogs[index] = { id: Number(id), title, tag, date, excerpt, link: '#' };
+        } else {
+          const newId = blogs.length > 0 ? Math.max(...blogs.map(b => b.id)) + 1 : 1;
+          blogs.push({ id: newId, title, tag, date, excerpt, link: '#' });
+        }
+        saveBlogs(blogs);
+        renderBlogList();
+        this.reset();
+        document.getElementById('blogId').value = '';
+      });
+
+      document.getElementById('btnCancel').addEventListener('click', function() {
+        document.getElementById('blogForm').reset();
+        document.getElementById('blogId').value = '';
+      });
+
+      document.getElementById('blogExcerpt').addEventListener('input', function() {
+        document.getElementById('charCount').textContent = this.value.length;
+      });
+
+      document.getElementById('btnReset').addEventListener('click', function() {
+        if (confirm('Reset semua tulisan ke versi awal? Data lokal akan hilang.')) {
+          localStorage.removeItem('blogs');
+          renderBlogList();
+        }
+      });
     });
   </script>
 </body>
